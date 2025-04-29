@@ -1,22 +1,28 @@
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react'
+import { useFetch } from '../../hooks/dataHook';
+import Loading from "./Loading";
+
 
 const DataFetching = ({endpoint}) => {
-    const [data,setData] = useState([]);
+    const { loading, error, data } = useFetch(endpoint);
 
-    useEffect(() => {
-        fetch(endpoint)
-            .then(response => response.json())
-            .then(json => setData(json));
-    },[endpoint]);
-
-  return (
-    <ul>
-        {data?.map(element => (
-            <li key={element.timestamp}>{element.timestamp} - {element.amount}</li>
-        ))}
-    </ul>
-  );
+    const buildUI = () => {
+        if (loading) return <Loading />;
+        if (loading || error) return <p>Ops! Something went wrong: {error}</p>;
+        if (!loading && !error)
+          return (
+            <ul>
+              {data.map(element => (
+                <li key={element.timestamp}>
+                  {element.timestamp} - {element.amount}
+                </li>
+              ))}
+            </ul>
+          );
+      };
+    
+      return buildUI();
 };
 
 DataFetching.propTypes = {
