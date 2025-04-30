@@ -1,32 +1,29 @@
-import PropTypes from 'prop-types';
-import React, { useEffect, useState } from 'react'
-import { useFetch } from '../../hooks/dataHook';
+import React from "react";
+import PropTypes from "prop-types";
 import Loading from "./Loading";
+import useFetch from "../../Hooks/useFetch";
 
-
-const DataFetching = ({endpoint}) => {
-    const { loading, error, data } = useFetch(endpoint);
-
-    const buildUI = () => {
-        if (loading) return <Loading />;
-        if (loading || error) return <p>Ops! Something went wrong: {error}</p>;
-        if (!loading && !error)
-          return (
-            <ul>
-              {data.map(element => (
-                <li key={element.timestamp}>
-                  {element.timestamp} - {element.amount}
-                </li>
-              ))}
-            </ul>
-          );
-      };
-    
-      return buildUI();
+const DataFetching = (selectedEndpoint) => {
+  const { loading, error, data } = useFetch(selectedEndpoint);
+  return (
+    <div>
+      {loading && <Loading />}
+      {data.dataCollected.length > 0 ? (
+        <ul>
+          {data.dataCollected.map((item, index) => (
+            <li key={index}>{`${item.timestamp} - ${item.amount}`}</li>
+          ))}
+        </ul>
+      ) : (
+        <p>There is no data</p>
+      )}
+      {error && <p>Error: {error.message}</p>}
+    </div>
+  );
 };
 
 DataFetching.propTypes = {
-    endpoint : PropTypes.string.isRequired
-}
+  selectedEndpoint: PropTypes.string,
+};
 
 export default DataFetching;

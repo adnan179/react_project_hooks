@@ -1,26 +1,20 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Aside from "../../common/components/Aside";
 import ChartContainer from "./ChartContainer";
 import Layout from "../../common/components/Layout";
 import Main from "../../common/components/Main";
 import SummaryContainer from "./SummaryContainer";
-import { useDispatch } from "react-redux";
-import { fetchDataset } from "./DashboardSlice";
 import Select from "../../common/components/Select";
+import { useData } from "../../context/dataContext";
 
 const DashboardShell = () => {
   const [selectedLabel, setSelectedLabel] = useState("");
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    dispatch(fetchDataset(`${process.env.REACT_APP_BASE_URL}/totals/`));
-  },[dispatch]);
+  const { updatedEndpoint } = useData();
 
   const handleSelectChange = (event) => {
-    const selectedLabel = event.target.selectedOptions[0].label;
-    const selectedValue = event.target.value;
-    dispatch(fetchDataset(selectedValue));
-    setSelectedLabel(selectedLabel);
+    const sLabel = event.target.selectedOptions[0].label;
+    setSelectedLabel(sLabel);
+    updatedEndpoint(event.target.value)
   };
 
   const optionsForSelect = [

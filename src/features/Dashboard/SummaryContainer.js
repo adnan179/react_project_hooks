@@ -1,10 +1,11 @@
-import React, { useContext } from "react";
-import { connect } from "react-redux";
-import PropTypes from "prop-types";
-import { globalContext } from "../../App";
+import React from "react";
+import useFetch from "../../hooks/dataHook";
 
 const SummaryContainer = () => {
-  const { salesTotal, subscriptionsTotal} = useContext(globalContext);
+  // const { salesTotal, subscriptionsTotal } = useData();
+  const {
+    data: { salesTotal, subscriptionsTotal },
+  } = useFetch(`${process.env.REACT_APP_BASE_URL}/totals/`);
   return (
     <div className="summary flex flex-row">
       <div className="card bg-indigo">
@@ -19,16 +20,4 @@ const SummaryContainer = () => {
   );
 };
 
-const mapStateToProps = state => {
-  return {
-    salesTotal: state.dataset.salesTotal,
-    subscriptionsTotal: state.dataset.subscriptionsTotal
-  };
-};
-
-SummaryContainer.propTypes = {
-  salesTotal: PropTypes.number.isRequired,
-  subscriptionsTotal: PropTypes.number.isRequired
-};
-
-export default connect(mapStateToProps)(SummaryContainer);
+export default SummaryContainer;
