@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useContext } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
+import { globalContext } from "../../App";
 
-const SummaryContainer = ({ salesTotal, subscriptionsTotal }) => {
+const SummaryContainer = () => {
+  const { salesTotal, subscriptionsTotal} = useContext(globalContext);
   return (
     <div className="summary flex flex-row">
       <div className="card bg-indigo">
