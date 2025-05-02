@@ -14,11 +14,11 @@ const dataContext = createContext();
 
 const DataProvider = ({ children }) => {
   const [endpoint, setEndpoint] = useState("");
-  const value = useFetch(endpoint);
+  const value = useFetch({endpoint});
 
-  const updateEndpoint = endpoint => setEndpoint(endpoint);
+  const updatedEndpoint = (endpoint) => setEndpoint(endpoint);
 
-  return <dataContext.Provider value={{...value, updateEndpoint}}>{children}</dataContext.Provider>;
+  return <dataContext.Provider value={{...value, updatedEndpoint}}>{children}</dataContext.Provider>;
 };
 
 const useData = () => {

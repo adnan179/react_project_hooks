@@ -3,8 +3,6 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@testing-library/jest-dom": "^4.2.4",
-    "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
     "chart.js": "^2.9.3",
     "react": "^16.13.1",
@@ -38,9 +36,19 @@
     ]
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^5.11.10",
+    "@testing-library/react": "^11.2.7",
+    "@testing-library/react-hooks": "^7.0.2",
     "cypress": "^14.3.2",
     "miragejs": "^0.1.40",
+    "mutationobserver-shim": "^0.3.7",
     "prop-types": "^15.7.2",
+    "react-test-renderer": "^16.13.1",
     "time-series-data-generator": "^0.1.5"
+  },
+  "jest": {
+    "coverageReporters": [
+      "html"
+    ]
   }
 }
