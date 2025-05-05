@@ -1,56 +1,74 @@
-import { renderHook } from "@testing-library/react-hooks";
-import { useFetch } from "./dataHook";
+import { renderHook, act } from "@testing-library/react-hooks";
+import useFetch from "./dataHook";
+import { SalesData, SubscriptionsData } from "../data";
 
-describe("useFetch hook", () => {
-    it("should handle errors", async () => {
-        jest.spyOn(window, "fetch").mockImplementationOnce(() => {
-          const fetchResponse = {
-            ok: false,
-            statusText: "500 Server error"
-          };
-          return Promise.resolve(fetchResponse);
-        });
-    
-        const { result, waitForNextUpdate } = renderHook(() =>
-          useFetch("/api/totals/")
-        );
-    
-        expect(result.current.data).toEqual([]);
-        expect(result.current.loading).toBeTruthy();
-        expect(result.current.error).toBeFalsy();
-    
-        await waitForNextUpdate();
-        expect(result.current.data).toEqual([]);
-        expect(result.current.loading).toBeFalsy();
-        expect(result.current.error).toEqual("500 Server error");
-    
-        window.fetch.mockRestore();
-      });
+jest.useFakeTimers();
 
-    it("should GET data", async () => {
-    const expected = { salesTotal: 899, subscriptionsTotal: 344 };
-    jest.spyOn(window, "fetch").mockImplementationOnce(() => {
-    const fetchResponse = {
-    ok: true,
-    json: () => Promise.resolve(expected)
-    };
-    return Promise.resolve(fetchResponse);
-    });
-
-    const { result, waitForNextUpdate } = renderHook(() =>
-    useFetch("/api/totals/")
+describe("useFetch hook with mock data", () => {
+  it("should return totals correctly", async () => {
+    const { result } = renderHook(() =>
+      useFetch({ endpoint: "/totals/" })
     );
 
-    expect(result.current.data).toEqual([]);
-    expect(result.current.loading).toBeTruthy();
-    expect(result.current.error).toBeFalsy();
+    // Initially loading
+    expect(result.current.loading).toBe(true);
 
-    await waitForNextUpdate();
-    expect(result.current.data).toMatchObject(expected);
-    expect(result.current.loading).toBeFalsy();
-    expect(result.current.error).toBeFalsy();
-
-    window.fetch.mockRestore();
+    // Fast-forward timer
+    await act(async () => {
+      jest.advanceTimersByTime(300);
     });
 
+    expect(result.current.data).toEqual({
+      salesTotal: SalesData.salesTotal,
+      subscriptionsTotal: SubscriptionsData.subscriptionsTotal,
+    });
+    expect(result.current.loading).toBe(false);
+    expect(result.current.error).toBe("");
+  });
+
+  it("should return sales data correctly", async () => {
+    const { result } = renderHook(() =>
+      useFetch({ endpoint: "/sales/" })
+    );
+
+    await act(async () => {
+      jest.advanceTimersByTime(300);
+    });
+
+    expect(result.current.data).toEqual(SalesData);
+    expect(result.current.loading).toBe(false);
+    expect(result.current.error).toBe("");
+  });
+
+  it("should return subscriptions data correctly", async () => {
+    const { result } = renderHook(() =>
+      useFetch({ endpoint: "/subscriptions/" })
+    );
+
+    await act(async () => {
+      jest.advanceTimersByTime(300);
+    });
+
+    expect(result.current.data).toEqual(SubscriptionsData);
+    expect(result.current.loading).toBe(false);
+    expect(result.current.error).toBe("");
+  });
+
+  it("should handle invalid endpoint error", async () => {
+    const { result } = renderHook(() =>
+      useFetch({ endpoint: "/invalid/" })
+    );
+
+    await act(async () => {
+      jest.advanceTimersByTime(300);
+    });
+
+    expect(result.current.data).toEqual({
+      dataCollected: [],
+      salesTotal: 0,
+      subscriptionsTotal: 0,
+    });
+    expect(result.current.loading).toBe(false);
+    expect(result.current.error).toEqual("Invalid endpoint");
+  });
 });

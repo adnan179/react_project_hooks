@@ -5,16 +5,16 @@ import Layout from "../../common/components/Layout";
 import Main from "../../common/components/Main";
 import SummaryContainer from "./SummaryContainer";
 import Select from "../../common/components/Select";
-import { useData } from "../../context/dataContext";
 
 const DashboardShell = () => {
-  const [selectedLabel, setSelectedLabel] = useState("");
-  const { updatedEndpoint } = useData();
+  const [selectedOption, setSelectedOption] = useState("");
 
   const handleSelectChange = (event) => {
     const sLabel = event.target.selectedOptions[0].label;
-    setSelectedLabel(sLabel);
-    updatedEndpoint(event.target.value)
+    const sValue = event.target.value;
+    const option = { label: sLabel, value: sValue };
+    setSelectedOption(option);
+    
   };
 
   const optionsForSelect = [
@@ -42,8 +42,8 @@ const DashboardShell = () => {
       </Aside>
       <Main>
         <h1>Welcome, <span className="bold">Learner!</span></h1>
-        <SummaryContainer />
-        <ChartContainer selectedLabel={selectedLabel} />
+        <SummaryContainer selectedOption={selectedOption}/>
+        <ChartContainer selectedOption={selectedOption}  />
       </Main>
     </Layout>
   )

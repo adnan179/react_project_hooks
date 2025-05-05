@@ -2,8 +2,10 @@ import React from "react";
 import { Line } from "react-chartjs-2";
 import PropTypes from "prop-types";
 
+
 const LineChart = ({ chartLabels, chartValues, label }) => {
-  const chartData = canvas => {
+  const chartData = (canvas )=> {
+    if (!canvas) return {}; // fallback
     const ctx = canvas.getContext("2d");
     let gradientFill = ctx.createLinearGradient(0, 0, 0, 250);
 
@@ -14,7 +16,7 @@ const LineChart = ({ chartLabels, chartValues, label }) => {
       labels: chartLabels,
       datasets: [
         {
-          label,
+          label: label || "Data",
           borderColor: "rgba(67, 65, 255, 0)",
           data: chartValues,
           backgroundColor: gradientFill
