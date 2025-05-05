@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import Loading from "./Loading";
-import useFetch from "../../Hooks/useFetch";
+import useFetch from "../../hooks/dataHook";
 
 const DataFetching = (selectedEndpoint) => {
   const { loading, error, data } = useFetch(selectedEndpoint);

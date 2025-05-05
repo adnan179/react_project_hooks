@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Select from "./Select";
+import Select from "../../common/components/Select";
 import DataFetching from "../../common/components/dataFetching";
 
 if (process.env.NODE_ENV === "development") {
